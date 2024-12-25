@@ -1,51 +1,84 @@
+import EmailTemplate from '@/components/email-template';
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import React from 'react';
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: Request) {
-  if(req.method == 'POST') {
-  try {
-    const data = await req.json();
-    
-    const emailContent = `
-      <p><strong>Car Information:</strong></p>
-      <p>Year: ${data.carYear}</p>
-      <p>Brand: ${data.carBrand}</p>
-      <p>Model: ${data.carModel}</p>
+  if (req.method === 'POST') {
+    try {
+      const data = await req.json();
 
-      <p><strong>Vehicle Condition:</strong></p>
-      <p>Condition: ${data.condition}</p>
-      <p>Vehicle Status: ${data.vehicleStatus}</p>
-      <p>Mileage: ${data.mileage}</p>
-      <p>Zip Code: ${data.zipCode}</p>
-      <p>Features: ${data.features.join(', ')}</p>
-      ${data.otherFeatures ? `<p>Other Features: ${data.otherFeatures}</p>` : ''}
-      <p>Car Title: ${data.carTitle}</p>
-      <p>Keys Available: ${data.hasKeys}</p>
+      // Ensure all required fields are present
+      const {
+        carYear,
+        carBrand,
+        carModel,
+        condition,
+        vehicleStatus,
+        mileage,
+        zipCode,
+        features,
+        otherFeatures,
+        carTitle,
+        hasKeys,
+        fullName,
+        email,
+        phone,
+        askingPrice,
+      } = data;
 
-      <p><strong>Contact Information:</strong></p>
-      <p>Full Name: ${data.fullName}</p>
-      <p>Email: ${data.email}</p>
-      <p>Phone: ${data.phone}</p>
-      <p>Asking Price: $${data.askingPrice}</p>
-    `;
+      if (
+        !carYear ||
+        !carBrand ||
+        !carModel ||
+        !condition ||
+        !vehicleStatus ||
+        !mileage ||
+        !zipCode ||
+        !fullName ||
+        !email ||
+        !phone ||
+        !askingPrice
+      ) {
+        return NextResponse.json(
+          { error: 'Missing required fields' },
+          { status: 400 }
+        );
+      }
 
-    // Send email using Resend
-    await resend.emails.send({
-      from: 'Contact@mustafabhikhapur.me',
-      to: ['bhikhapurmustafa@gmail.com', 'bareeqdigitals@gmail.com'],
-      subject: 'New Car Submission Details',
-      html: emailContent,
-    });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+      // Send email using Resend
+      await resend.emails.send({
+        from: 'Contact@mustafabhikhapur.me',
+        to: ['bhikhapurmustafa@gmail.com', 'bareeqdigitals@gmail.com'],
+        subject: 'New Car Submission Details',
+        react: React.createElement(EmailTemplate,{
+          carYear:carYear,
+          carBrand:carBrand,
+          carModel:carModel,
+          condition:condition,
+          vehicleStatus:vehicleStatus,
+          mileage:mileage,
+          zipCode:zipCode,
+          features:features,
+          otherFeatures:otherFeatures,
+          carTitle:carTitle,
+          hasKeys:hasKeys,
+          fullName:fullName,
+          email:email,
+          phone:phone,
+          askingPrice:askingPrice,
+        }),
+      });
+
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    }
+  } else {
+    return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
   }
-}
-else{
-  return NextResponse.error();
-}
 }
