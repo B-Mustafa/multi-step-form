@@ -135,7 +135,7 @@ export function MultiStepForm() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} method='POST' className="space-y-6">
           {renderStepContent()}
 
           <div className="flex justify-between pt-4">
