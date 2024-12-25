@@ -14,7 +14,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
     <div className="space-y-4">
       <FormField
         control={form.control}
-        name="name"
+        name="fullName"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Full Name</FormLabel>

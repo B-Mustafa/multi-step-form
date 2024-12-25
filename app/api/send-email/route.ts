@@ -1,38 +1,45 @@
 import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY!); // Ensure this environment variable is set
 
 export async function POST(req: Request) {
+  // console.log("Api has been hit",req)
   try {
     const data = await req.json();
     
     const emailContent = `
-      Car Information:
-      Year: ${data.carYear}
-      Brand: ${data.carBrand}
-      Model: ${data.carModel}
+      <p><strong>Car Information:</strong></p>
+      <p>Year: ${data.carYear}</p>
+      <p>Brand: ${data.carBrand}</p>
+      <p>Model: ${data.carModel}</p>
 
-      Vehicle Condition:
-      Condition: ${data.condition}
-      Vehicle Status: ${data.vehicleStatus}
-      Mileage: ${data.mileage}
-      Zip Code: ${data.zipCode}
-      Features: ${data.features.join(', ')}
-      ${data.otherFeatures ? `Other Features: ${data.otherFeatures}` : ''}
-      Car Title: ${data.carTitle}
-      Keys Available: ${data.hasKeys}
+      <p><strong>Vehicle Condition:</strong></p>
+      <p>Condition: ${data.condition}</p>
+      <p>Vehicle Status: ${data.vehicleStatus}</p>
+      <p>Mileage: ${data.mileage}</p>
+      <p>Zip Code: ${data.zipCode}</p>
+      <p>Features: ${data.features.join(', ')}</p>
+      ${data.otherFeatures ? `<p>Other Features: ${data.otherFeatures}</p>` : ''}
+      <p>Car Title: ${data.carTitle}</p>
+      <p>Keys Available: ${data.hasKeys}</p>
 
-      Contact Information:
-      Full Name: ${data.fullName}
-      Email: ${data.email}
-      Phone: ${data.phone}
-      Asking Price: $${data.askingPrice}
+      <p><strong>Contact Information:</strong></p>
+      <p>Full Name: ${data.fullName}</p>
+      <p>Email: ${data.email}</p>
+      <p>Phone: ${data.phone}</p>
+      <p>Asking Price: $${data.askingPrice}</p>
     `;
 
-    const recipients = ['bareeqdigitals@gmail.com', 'bhikhapurmustafa@gmail.com'];
+    // Send email using Resend
+    const emailResponse = await resend.emails.send({
+      from: 'Contact@mustafabhikhapur.me',
+      to: ['bhikhapurmustafa@gmail.com','bareeqdigitals@gmail.com'],
+      subject: 'New Car Submission Details',
+      html: emailContent,
+    });
 
-    // In a real application, you would use a proper email service here
-    // For demo purposes, we'll just log the email content
-    console.log('Email Content:', emailContent);
-    console.log('Recipients:', recipients);
+    console.log('Email Response:', emailResponse);
 
     return NextResponse.json({ success: true });
   } catch (error) {

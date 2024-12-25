@@ -17,7 +17,7 @@ export const formSchema = z.object({
   hasKeys: z.string().min(1, 'Please specify if keys are available'),
   
   // Step 3 - Contact & Price
-  name: z.string().min(1, 'Name is required'),
+  // name: z.string().min(1, 'Name is required'),
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),

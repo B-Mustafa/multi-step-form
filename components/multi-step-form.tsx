@@ -64,7 +64,7 @@ export function MultiStepForm() {
   const nextStep = () => {
     const fields = getFieldsForStep(step);
     const isStepValid = fields.every((field) => !form.formState.errors[field as keyof FormData]);
-
+    
     if (isStepValid) {
       setStep((prev) => Math.min(prev + 1, 3));
     } else {
@@ -74,14 +74,14 @@ export function MultiStepForm() {
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-  const getFieldsForStep = (step: number): Array<keyof FormData> => {
+  const getFieldsForStep = (step: number) => {
     switch (step) {
       case 1:
-        return ['carYear', 'carBrand', 'carModel'];
+        return ['carYear', 'carBrand', 'carModel'] as const;
       case 2:
-        return ['condition', 'vehicleStatus', 'mileage', 'zipCode', 'carTitle', 'hasKeys'];
+        return ['condition', 'vehicleStatus', 'mileage', 'zipCode', 'carTitle', 'hasKeys'] as const;
       case 3:
-        return ['fullName', 'email', 'phone', 'askingPrice'];
+        return ['fullName', 'email', 'phone', 'askingPrice'] as const;
       default:
         return [];
     }
@@ -111,6 +111,7 @@ export function MultiStepForm() {
 
       <div className="space-y-2">
         <Progress value={(step / 3) * 100} className="h-2" />
+        
         <div className="flex justify-between px-4">
           <div className="flex flex-col items-center">
             <div className={`p-2 rounded-full ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
