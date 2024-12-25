@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY!); // Ensure this environment variable is set
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: Request) {
-  // console.log("Api has been hit",req)
   try {
     const data = await req.json();
     
@@ -32,14 +31,12 @@ export async function POST(req: Request) {
     `;
 
     // Send email using Resend
-    const emailResponse = await resend.emails.send({
+    await resend.emails.send({
       from: 'Contact@mustafabhikhapur.me',
-      to: ['bhikhapurmustafa@gmail.com','bareeqdigitals@gmail.com'],
+      to: ['bhikhapurmustafa@gmail.com', 'bareeqdigitals@gmail.com'],
       subject: 'New Car Submission Details',
       html: emailContent,
     });
-
-    console.log('Email Response:', emailResponse);
 
     return NextResponse.json({ success: true });
   } catch (error) {
