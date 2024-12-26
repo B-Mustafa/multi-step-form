@@ -1,27 +1,20 @@
-import CarInquiryEmail from '@/components/emails/car-inquiry';
+import { sendCarInquiryEmails } from '@/lib/emails';
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const runtime = 'edge'; // Add edge runtime
 
+// Define allowed methods
 export async function POST(req: Request) {
+  if (req.method !== 'POST') {
+    return NextResponse.json(
+      { error: 'Method not allowed' },
+      { status: 405 }
+    );
+  }
+
   try {
     const data = await req.json();
-    
-    const recipients = ['bareeqdigitals@gmail.com', 'bhikhapurmustafa@gmail.com'];
-    
-    // Send email to each recipient
-    await Promise.all(
-      recipients.map(async (recipient) => {
-        await resend.emails.send({
-          from: 'Car Inquiry Contact@mustafabhikhapur.me',
-          to: recipient,
-          subject: `New Car Inquiry from ${data.fullName}`,
-          react: CarInquiryEmail(data) as React.ReactElement,
-        });
-      })
-    );
-
+    await sendCarInquiryEmails(data);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error sending email:', error);
@@ -30,4 +23,15 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+// Handle OPTIONS request for CORS
+export async function OPTIONS() {
+  return NextResponse.json({}, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }
