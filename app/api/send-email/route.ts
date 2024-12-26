@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import CarInquiryEmail from '@/emails/car-inquiry';
 import { EMAIL_CONFIG } from '@/lib/constants';
+import CarInquiryEmail from '@/components/emails/car-inquiry';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
