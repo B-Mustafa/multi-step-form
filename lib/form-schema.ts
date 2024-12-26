@@ -11,7 +11,7 @@ export const formSchema = z.object({
   vehicleStatus: z.string().min(1, 'Vehicle status is required'),
   mileage: z.string().min(1, 'Mileage is required'),
   zipCode: z.string().min(5, 'Valid zip code is required'),
-  features: z.array(z.string()).default([]),
+  featured: z.array(z.string()).default([]),
   otherFeatures: z.string().optional(),
   carTitle: z.string().min(1, 'Car title status is required'),
   hasKeys: z.string().min(1, 'Please specify if keys are available'),

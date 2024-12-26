@@ -27,7 +27,7 @@ export function MultiStepForm() {
       vehicleStatus: '',
       mileage: '',
       zipCode: '',
-      features: [],
+      featured: [],
       otherFeatures: '',
       carTitle: '',
       hasKeys: '',
@@ -41,7 +41,7 @@ export function MultiStepForm() {
   const onSubmit = async (values: FormData) => {
     try {
       setIsSubmitting(true);
-      const response = await fetch('/api/send-email', {
+      const response = await fetch('api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ export function MultiStepForm() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)}  className="space-y-6">
           {renderStepContent()}
 
           <div className="flex justify-between pt-4">

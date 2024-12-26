@@ -19,7 +19,7 @@ import {
     vehicleStatus: string;
     mileage: string;
     zipCode: string;
-    features: string[];
+    featured: string[];
     otherFeatures?: string;
     carTitle: string;
     hasKeys: string;
@@ -54,7 +54,7 @@ import {
                 <Text>Vehicle Status: {props.vehicleStatus}</Text>
                 <Text>Mileage: {props.mileage}</Text>
                 <Text>Zip Code: {props.zipCode}</Text>
-                <Text>Features: {props.features.join(', ')}</Text>
+                <Text>Features: {props.featured.join(', ')}</Text>
                 {props.otherFeatures && <Text>Other Features: {props.otherFeatures}</Text>}
                 <Text>Car Title: {props.carTitle}</Text>
                 <Text>Keys Available: {props.hasKeys}</Text>

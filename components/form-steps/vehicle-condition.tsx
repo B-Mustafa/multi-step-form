@@ -98,7 +98,7 @@ export function VehicleCondition({ form }: VehicleConditionProps) {
 
       <FormField
         control={form.control}
-        name="features"
+        name="featured"
         render={() => (
           <FormItem>
             <FormLabel>Features</FormLabel>
@@ -107,7 +107,7 @@ export function VehicleCondition({ form }: VehicleConditionProps) {
                 <FormField
                   key={feature}
                   control={form.control}
-                  name="features"
+                  name="featured"
                   render={({ field }) => (
                     <FormItem className="flex items-center space-x-2">
                       <FormControl>
@@ -131,7 +131,7 @@ export function VehicleCondition({ form }: VehicleConditionProps) {
               ))}
               <FormField
                 control={form.control}
-                name="features"
+                name="featured"
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormControl>
