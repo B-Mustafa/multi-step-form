@@ -1,33 +1,52 @@
+import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { FormData } from './form-schema';
+import { EMAIL_CONFIG } from './constants';
 import CarInquiryEmail from '@/components/emails/car-inquiry';
 
-// Initialize Resend with API key
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Email recipients
-const RECIPIENTS = ['bareeqdigitals@gmail.com', 'bhikhapurmustafa@gmail.com'];
-
-export async function sendCarInquiryEmails(formData: FormData) {
+export async function POST(req: Request) {
   if (!process.env.RESEND_API_KEY) {
-    throw new Error('RESEND_API_KEY is not configured');
+    return NextResponse.json(
+      { error: 'Email service is not configured' },
+      { status: 500 }
+    );
   }
 
   try {
-    // Send emails to all recipients in parallel
-    const emailPromises = RECIPIENTS.map((recipient) => 
+    const data = await req.json();
+    
+    if (!data) {
+      return NextResponse.json(
+        { error: 'No data provided' },
+        { status: 400 }
+      );
+    }
+
+    // Send email to each recipient
+    const emailPromises = EMAIL_CONFIG.recipients.map(recipient =>
       resend.emails.send({
-        from: 'Car Inquiry <onboarding@resend.dev>',
+        from: EMAIL_CONFIG.from,
         to: recipient,
-        subject: `New Car Inquiry from ${formData.fullName}`,
-        react: CarInquiryEmail(formData),
+        subject: EMAIL_CONFIG.subject(data.fullName),
+        react: CarInquiryEmail(data),
       })
     );
 
     await Promise.all(emailPromises);
-    return { success: true };
+    
+    return NextResponse.json({ 
+      success: true,
+      message: 'Email sent successfully' 
+    });
   } catch (error) {
-    console.error('Failed to send emails:', error);
-    throw error;
+    console.error('Error sending email:', error);
+    return NextResponse.json(
+      { 
+        error: 'Failed to send email',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 }
